@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
 });
 
 // Listen for incoming HTTP connections on port 8080 for Socket.IO communication
-httpServer.listen(8080, function () {
+httpServer.listen(8080,"0.0.0.0", function () {
     console.log('Socket.IO server started on port 8080');
 });
 

@@ -1,71 +1,58 @@
-// Import dependencies
-const aedes = require('aedes')();
-const net = require('net');
-const http = require('http');
-const socketIo = require('socket.io');
+// Import required modules
+const Aedes = require('aedes'); // Import Aedes MQTT broker
+const net = require('net'); // Import net module for TCP connections
+const http = require('http'); // Import HTTP module for HTTP server
+const socketIo = require('socket.io'); // Import socket.io for real-time communication
 
-// MQTT Broker Config
-const MQTT_PORT = 1883;
-const MQTT_HOST = '0.0.0.0'; // Listen on all network interfaces
+// Create an instance of the Aedes MQTT broker
+const aedes = Aedes(); // Instantiate the broker
 
-// Create MQTT server
-const mqttServer = net.createServer(aedes.handle);
-mqttServer.listen(MQTT_PORT, MQTT_HOST, () => {
-  console.log(`🚀 MQTT broker listening on ${MQTT_HOST}:${MQTT_PORT}`);
+// Setting up the TCP server to handle MQTT connections
+const server = net.createServer(aedes.handle); // Create a TCP server for MQTT
+
+// Listen for incoming MQTT connections on port 1883
+server.listen(1883, function () {
+    console.log('MQTT broker started on port 1883');
 });
 
-// HTTP + Socket.IO Config (for web dashboard)
-const HTTP_PORT = 3000;
+// Setting up the HTTP server for Socket.IO communication
 const httpServer = http.createServer();
-const io = socketIo(httpServer, {
-  cors: {
-    origin: "*", // Allow all origins (for dev), restrict in production
-  }
-});
+const io = socketIo(httpServer); // Create a Socket.IO server
 
-// Create Socket.IO server
-httpServer.listen(HTTP_PORT, () => {
-  console.log(`🌐 Socket.IO server listening on port ${HTTP_PORT}`);
-});
-
-// Handle MQTT client connections
-aedes.on('clientReady', (client) => {
-  console.log(`🔌 MQTT client connected: ${client?.id || 'unknown'}`);
-  io.emit('clientConnected', { id: client?.id || 'unknown' });
-});
-
-// Handle MQTT client disconnections
-aedes.on('clientDisconnect', (client) => {
-  console.log(`❌ MQTT client disconnected: ${client?.id || 'unknown'}`);
-  io.emit('clientDisconnected', { id: client?.id || 'unknown' });
-});
-
-// Handle published MQTT messages
-aedes.on('publish', async (packet, client) => {
-  if (client) {
-    const message = {
-      clientId: client.id,
-      topic: packet.topic,
-      payload: packet.payload.toString(),
-    };
-
-    console.log(`📦 Message received: ${message.topic} => ${message.payload}`);
-
-    // Emit to Web Clients using the topic as event name
-    io.emit('mqttMessage', message);
-
-    // Optional: You can selectively emit based on topic, example:
-    // if (packet.topic.startsWith('ecg/')) {
-    //   io.emit('ecgData', message);
-    // }
-  }
-});
-
-// Handle Web dashboard Socket.IO connections
+// Listen for new client connections via Socket.IO
 io.on('connection', (socket) => {
-  console.log('🔗 Web dashboard connected via Socket.IO');
+    console.log('Client connected via Socket.IO');
 
-  socket.on('disconnect', () => {
-    console.log('🔌 Web dashboard disconnected');
-  });
+    // Handle receiving messages from the client
+    socket.on('message', (msg) => {
+        console.log('Message from client:', msg);
+    });
+
+    // Handle client disconnect
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
+
+// Listen for incoming HTTP connections on port 8080 for Socket.IO communication
+httpServer.listen(8080, function () {
+    console.log('Socket.IO server started on port 8080');
+});
+
+// Setting up logging and handling incoming messages from MQTT clients
+aedes.on('client', (client) => {
+    console.log('Client connected:', client.id);
+});
+
+aedes.on('clientDisconnect', (client) => {
+    console.log('Client disconnected:', client.id);
+});
+
+// Handling incoming messages from MQTT clients
+aedes.on('publish', (packet, client) => {
+    if (client) {
+        console.log(`Message from ${client.id}: ${packet.payload.toString()}`);
+    } else {
+        console.log('Message received from anonymous client:', packet.payload.toString());
+    }
 });

@@ -1,58 +1,66 @@
 // Import required modules
-const Aedes = require('aedes'); // Import Aedes MQTT broker
-const net = require('net'); // Import net module for TCP connections
-const http = require('http'); // Import HTTP module for HTTP server
-const socketIo = require('socket.io'); // Import socket.io for real-time communication
+const Aedes = require('aedes');
+const net = require('net');
+const https = require('https');
+const fs = require('fs');
+const socketIo = require('socket.io');
 
 // Create an instance of the Aedes MQTT broker
-const aedes = Aedes(); // Instantiate the broker
+const aedes = Aedes();
 
-// Setting up the TCP server to handle MQTT connections
-const server = net.createServer(aedes.handle); // Create a TCP server for MQTT
-
-// Listen for incoming MQTT connections on port 1883
-server.listen(1883, function () {
-    console.log('MQTT broker started on port 1883');
+// Setting up the TCP server to handle MQTT connections (port 1883 for MQTT)
+const mqttServer = net.createServer(aedes.handle);
+mqttServer.listen(1883, function () {
+  console.log('MQTT broker started on port 1883');
 });
 
-// Setting up the HTTP server for Socket.IO communication
-const httpServer = http.createServer();
-const io = socketIo(httpServer); // Create a Socket.IO server
+// Load SSL certificates (replace with your certificate paths)
+const options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/YOUR_DOMAIN/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/YOUR_DOMAIN/fullchain.pem')
+};
 
-// Listen for new client connections via Socket.IO
+// Create an HTTPS server for Socket.IO
+const httpsServer = https.createServer(options);
+const io = socketIo(httpsServer, {
+  cors: {
+    origin: "https://ambient-insight-dash.lovable.app",
+            "https://noisemonitor.harshvaidya.tech",
+    methods: ["GET", "POST"]
+  }
+});
+
+// Handle Socket.IO connections
 io.on('connection', (socket) => {
-    console.log('Client connected via Socket.IO');
+  console.log('Client connected via Socket.IO');
 
-    // Handle receiving messages from the client
-    socket.on('message', (msg) => {
-        console.log('Message from client:', msg);
-    });
+  socket.on('message', (msg) => {
+    console.log('Message from client:', msg);
+  });
 
-    // Handle client disconnect
-    socket.on('disconnect', () => {
-        console.log('Client disconnected');
-    });
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+  });
 });
 
-// Listen for incoming HTTP connections on port 8080 for Socket.IO communication
-httpServer.listen(8080,"0.0.0.0", function () {
-    console.log('Socket.IO server started on port 8080');
+// Listen for HTTPS connections on port 8080 (WSS)
+httpsServer.listen(8080, "0.0.0.0", function () {
+  console.log('Secure Socket.IO (WSS) server started on port 8080');
 });
 
-// Setting up logging and handling incoming messages from MQTT clients
+// MQTT client logging
 aedes.on('client', (client) => {
-    console.log('Client connected:', client.id);
+  console.log('MQTT Client connected:', client.id);
 });
 
 aedes.on('clientDisconnect', (client) => {
-    console.log('Client disconnected:', client.id);
+  console.log('MQTT Client disconnected:', client.id);
 });
 
-// Handling incoming messages from MQTT clients
 aedes.on('publish', (packet, client) => {
-    if (client) {
-        console.log(`Message from ${client.id}: ${packet.payload.toString()}`);
-    } else {
-        console.log('Message received from anonymous client:', packet.payload.toString());
-    }
+  if (client) {
+    console.log(`Message from ${client.id}: ${packet.payload.toString()}`);
+  } else {
+    console.log('Message from anonymous client:', packet.payload.toString());
+  }
 });

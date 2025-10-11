@@ -14,10 +14,10 @@ mqttServer.listen(1883, function () {
   console.log('MQTT broker started on port 1883');
 });
 
-// Load SSL certificates (replace with your certificate paths)
+// Load SSL certificates (replace with your actual backend domain)
 const options = {
-  key: fs.readFileSync('/etc/letsencrypt/live/YOUR_DOMAIN/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/YOUR_DOMAIN/fullchain.pem')
+  key: fs.readFileSync('/etc/letsencrypt/live/noisemonitor.harshvaidya.tech/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/noisemonitor.harshvaidya.tech/fullchain.pem')
 };
 
 // Create an HTTPS server for Socket.IO
@@ -25,7 +25,6 @@ const httpsServer = https.createServer(options);
 const io = socketIo(httpsServer, {
   cors: {
     origin: "https://ambient-insight-dash.lovable.app",
-            "https://noisemonitor.harshvaidya.tech",
     methods: ["GET", "POST"]
   }
 });

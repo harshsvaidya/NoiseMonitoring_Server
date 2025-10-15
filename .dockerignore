@@ -1,0 +1,39 @@
+
+# ============================================
+# .dockerignore for root directory
+# Place in: NoiseMonitoring_Server/.dockerignore
+# ============================================
+
+# Node modules
+**/node_modules
+**/npm-debug.log
+
+# Build outputs
+**/dist
+**/build
+
+# Logs
+**/logs
+**/*.log
+
+# Environment files
+**/.env
+**/.env.local
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+**/*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+**/tmp
+**/temp
+

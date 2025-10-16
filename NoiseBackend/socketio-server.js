@@ -84,7 +84,7 @@ this.redis = new Redis({
 
   setupAPIRoutes() {
     // Health check
-    this.app.get('/health', (req, res) => {
+    this.app.get('/api/health', (req, res) => {
       res.json({
         status: 'ok',
         nodes: this.connectedNodes.size,

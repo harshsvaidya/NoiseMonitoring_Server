@@ -1,6 +1,6 @@
 // socketio-server.js
 // Handles real-time streaming from IoT nodes and to clients
-
+require('dotenv').config();
 const express = require('express');
 const http = require('node:http');
 const socketIO = require('socket.io');
@@ -10,20 +10,22 @@ const cors = require('cors');
 
 // Configuration
 const config = {
-  port: process.env.PORT || 80,
+  port: parseInt(process.env.PORT, 10) || 3000,
   redis: {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: process.env.REDIS_PORT || 59003
+    host: process.env.REDIS_HOST || '127.0.0.1',
+    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+    password: process.env.REDIS_PASSWORD || undefined
   },
   mongodb: {
-    uri: process.env.MONGO_URI || 'mongodb://localhost:59002',
+    uri: process.env.MONGO_URI || 'mongodb://localhost:27017/timeseries_db',
     database: 'timeseries_db'
   },
   batch: {
-    queuePrefix: 'queue:node:',
-    bufferSize: 100
+    queuePrefix: process.env.QUEUE_PREFIX || 'queue:node:',
+    bufferSize: parseInt(process.env.BUFFER_SIZE, 10) || 100
   }
 };
+
 
 class SocketIOServer {
   constructor() {
@@ -43,7 +45,11 @@ class SocketIOServer {
 
     });
 
-    this.redis = new Redis(config.redis);
+this.redis = new Redis({
+  host: config.redis.host,
+  port: config.redis.port,
+  password: config.redis.password
+});
     this.mongoClient = null;
     this.db = null;
 

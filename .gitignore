@@ -1,2 +1,3 @@
 node_modules/
 noise_monitoring.pem
+*-lock.json

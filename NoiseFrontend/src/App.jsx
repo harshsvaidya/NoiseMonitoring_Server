@@ -1,26 +1,26 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-	LineChart,
-	Line,
-	XAxis,
-	YAxis,
-	CartesianGrid,
-	Tooltip,
-	Legend,
-	ResponsiveContainer,
-} from "recharts";
 import {
 	Activity,
+	Clock,
+	Database,
+	Server,
+	TrendingUp,
 	Wifi,
 	WifiOff,
-	Database,
-	TrendingUp,
-	Clock,
-	Server,
 } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import {
+	CartesianGrid,
+	Legend,
+	Line,
+	LineChart,
+	ResponsiveContainer,
+	Tooltip,
+	XAxis,
+	YAxis,
+} from "recharts";
 import io from "socket.io-client";
 
-const API_URL = "http://localhost";
+const API_URL = "http://silence-gaurd.ddns.net/";
 
 export default function IoTDashboard() {
 	const [socket, setSocket] = useState(null);

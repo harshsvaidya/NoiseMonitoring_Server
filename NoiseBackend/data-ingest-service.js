@@ -1,6 +1,6 @@
 // data-ingest-service.js
 // Handles queued data processing and batch writing to MongoDB
-
+require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const Redis = require('ioredis');
 

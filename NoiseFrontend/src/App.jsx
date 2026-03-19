@@ -390,11 +390,6 @@ export default function IoTDashboard() {
 		const live = liveData[selectedNode.nodeId];
 		return (
 			<div style={styles.page}>
-				<style>{`
-					@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
-					* { box-sizing: border-box; margin: 0; padding: 0; }
-					@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-				`}</style>
 				<Header />
 				<div style={styles.content}>
 					<button style={styles.backBtn} onClick={handleBackToOverview}>
@@ -534,36 +529,9 @@ export default function IoTDashboard() {
 			</div>
 		);
 	}
-	function Header() {
-		return (
-			<header className="w-full bg-orange-500 shadow-md">
-				<div className="max-w-7xl mx-auto flex items-center gap-4 px-6 h-16">
-
-					{/* Logo */}
-					<img
-						src="https://tse4.mm.bing.net/th/id/OIP.ToLkwjrNOCJd86BTPeSumwHaBP?pid=Api&P=0&h=180"
-						alt="GSFC University"
-						className="h-10 object-contain bg-white rounded px-2 py-1"
-					/>
-
-					{/* Title */}
-					<h1 className="text-white text-xl font-semibold tracking-wide">
-						Digital Campus System
-					</h1>
-
-				</div>
-			</header>
-		);
-	}
 
 	return (
 		<div style={styles.page}>
-			<style>{`
-				@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
-				* { box-sizing: border-box; margin: 0; padding: 0; }
-				@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-				.node-card:hover { border-color: #0EA5E9 !important; box-shadow: 0 4px 20px rgba(14,165,233,0.12) !important; transform: translateY(-2px) !important; }
-			`}</style>
 			<Header />
 			<div style={styles.content}>
 				{/* Page title */}

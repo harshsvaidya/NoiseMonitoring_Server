@@ -363,13 +363,13 @@ export default function IoTDashboard() {
 	const Header = () => (
 		<header style={styles.header}>
 			<div style={styles.logoArea}>
-				<div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-					<img src="/Gemini_Generated_Image_1oycc21oycc21oyc.png" alt="Gemini Generated" style={{ width: 100, height: 100, objectFit: 'contain' }} />
-									<div>
-					<div style={styles.brandName}>SilenceGuard</div>
-				</div>
-					<img src="/gsfcu-logo.png" alt="GSFCU" style={{ width: 100, height: 100, objectFit: 'contain' }} />
-					<img src="/guiitar.jpg" alt="Guiitar" style={{ width: 100, height: 100, objectFit: 'contain' }} />
+				<div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+					<img src="/Gemini_Generated_Image_1oycc21oycc21oyc.png" alt="Gemini Generated" style={{ height: "8vh", objectFit: 'contain' }} />
+					<div>
+						<div style={styles.brandName}>SilenceGuard</div>
+					</div>
+					<img src="/gsfcu-logo.png" alt="GSFCU" style={{ display: "block", height: 25, objectFit: 'contain' }} />
+					<img src="/guiitar.jpg" alt="Guiitar" style={{  display: "block", height: 50, objectFit: 'contain' }} />
 				</div>
 
 			</div>

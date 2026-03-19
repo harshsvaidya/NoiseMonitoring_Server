@@ -534,6 +534,27 @@ export default function IoTDashboard() {
 			</div>
 		);
 	}
+	function Header() {
+		return (
+			<header className="w-full bg-orange-500 shadow-md">
+				<div className="max-w-7xl mx-auto flex items-center gap-4 px-6 h-16">
+
+					{/* Logo */}
+					<img
+						src="https://tse4.mm.bing.net/th/id/OIP.ToLkwjrNOCJd86BTPeSumwHaBP?pid=Api&P=0&h=180"
+						alt="GSFC University"
+						className="h-10 object-contain bg-white rounded px-2 py-1"
+					/>
+
+					{/* Title */}
+					<h1 className="text-white text-xl font-semibold tracking-wide">
+						Digital Campus System
+					</h1>
+
+				</div>
+			</header>
+		);
+	}
 
 	return (
 		<div style={styles.page}>

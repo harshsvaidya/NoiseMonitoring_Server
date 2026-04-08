@@ -83,7 +83,7 @@ services:
     depends_on:
       - socketio-server
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
       - ./NoiseFrontend/dist:/usr/share/nginx/html:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
